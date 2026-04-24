@@ -278,13 +278,12 @@
       margin-top: var(--space-4);
     }
     .toolbar-save-grid {
+      display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
     .toolbar-share {
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
+      margin-top: 0;
     }
     .btn-half {
       width: 100%;
@@ -295,17 +294,7 @@
     }
     .btn-share {
       width: 100%;
-      max-width: 320px;
-      justify-content: center;
-      padding-left: 22px;
-      padding-right: 22px;
-      height: 54px;
-    }
-
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: var(--space-4);
+      height: 48px;
     }
     .toolbar .btn { padding: 13px 14px; font-size: var(--text-sm); }
     .notice-box {
@@ -426,7 +415,9 @@
         <article class="result-card" id="resultCard">
           <h2 id="resultTitle">결과 미리보기</h2>
           <div class="price" id="fairPrice">₩0</div>
-          <div class="result-note-box"><div class="sub" id="resultDesc">적정주가까지 꼭 상승한다는 의미보다<br>이 가격까지 상승 가능하다고 보셔야합니다</div></div>
+          <div class="result-note-box">
+            <div class="sub result-desc" id="resultDesc">적정주가까지 꼭 상승한다는 의미보다<br>이 가격까지 상승 가능하다고 보셔야합니다</div>
+          </div>
           <div class="metrics">
             <div class="metric"><span>현재가</span><strong id="metricCurrent">-</strong></div>
             <div class="metric"><span>상승여력</span><strong id="metricUpside">-</strong></div>
@@ -446,9 +437,13 @@
             </div>
           </div>
           <div class="toolbar">
-            <button class="btn btn-soft" id="copyInitialLink">계산기 공유하기</button>
-                        <button class="btn btn-soft" id="downloadCsv">CSV 저장</button>
-            <button class="btn btn-primary" id="downloadJpg">JPG 저장</button>
+            <div class="toolbar-save-grid">
+              <button class="btn btn-soft btn-half" id="downloadCsv">CSV 저장</button>
+              <button class="btn btn-primary btn-half" id="downloadJpg">JPG 저장</button>
+            </div>
+            <div class="toolbar-share">
+              <button class="btn btn-soft btn-share" id="copyInitialLink">계산기 공유하기</button>
+            </div>
           </div>
           <div class="notice-box"><p class="footer-note">참고 수치일 뿐<br>매매의 절대적인 기준이 될 수 없습니다.<br>투자는 스스로 공부하고 하세요</p></div>
         </article>
@@ -630,11 +625,4 @@
     restoreFromUrl();
   </script>
 </body>
-          <div class="toolbar toolbar-save-grid">
-            <button class="btn btn-soft btn-half" id="downloadCsv">CSV 저장</button>
-            <button class="btn btn-soft btn-half" id="downloadJpg">JPG 저장</button>
-          </div>
-          <div class="toolbar toolbar-share">
-            <button class="btn btn-soft btn-share" id="copyInitialLink">계산기 공유하기</button>
-          </div>
 
