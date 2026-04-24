@@ -314,7 +314,7 @@
     <section class="hero">
       <span class="eyebrow">MOBILE VALUATION TOOL</span>
       <h1>속지않는<br>밸류에이션 계산기</h1>
-      <p>PER 적정주가와 S-RIM 적정주가를<br>링크로 공유하고<br>CSV, JPG 파일로 저장할 수 있어요</p>
+      <p>PER 방식과 S-RIM 방식으로<br>적정주가를 계산하고<br>CSV, JPG 파일로 저장할 수 있어요</p>
       <div class="hero-brand">
         <svg class="clover-logo" viewBox="0 0 64 64" aria-label="Lucky 2026 네잎클로버 로고" role="img">
           <circle cx="32" cy="32" r="6" fill="#67b84f"/>
@@ -417,9 +417,8 @@
             </div>
           </div>
           <div class="toolbar">
-            <button class="btn btn-soft" id="copyInitialLink">계산기 공유</button>
-            <button class="btn btn-soft" id="shareResult">결과 공유</button>
-            <button class="btn btn-soft" id="downloadCsv">CSV 저장</button>
+            <button class="btn btn-soft" id="copyInitialLink">공유하기</button>
+                        <button class="btn btn-soft" id="downloadCsv">CSV 저장</button>
             <button class="btn btn-primary" id="downloadJpg">JPG 저장</button>
           </div>
           <div class="notice-box"><p class="footer-note">계산 후 나오는 적정 주가는<br>참고 수치일 뿐<br>매매의 절대적인 기준이 될 수 없습니다.<br>투자는 스스로 공부하고 하세요</p></div>
@@ -550,22 +549,14 @@
     }
 
     async function copyInitialLink() {
-      const initialUrl = location.origin + location.pathname;
+      const initialUrl = location.href;
       if (navigator.share) {
-        try { await navigator.share({ title: '밸류에이션 계산기', url: initialUrl }); return; } catch(e) {}
+        try { await navigator.share({ title: '밸류에이션 계산기', text: '밸류에이션 계산기', url: initialUrl }); return; } catch(e) {}
       }
       await navigator.clipboard.writeText(initialUrl);
-      alert('계산기 공유 링크가 복사되었습니다.');
+      alert('공유 링크가 복사되었습니다.');
     }
 
-    async function shareResult() {
-      const shareUrl = latestResult.shareParams ? `${location.origin}${location.pathname}?${latestResult.shareParams}` : location.href;
-      if (navigator.share) {
-        try { await navigator.share({ title: '밸류에이션 계산기 결과', text: `${latestResult.stockName || '종목'} 계산 결과`, url: shareUrl }); return; } catch(e) {}
-      }
-      await navigator.clipboard.writeText(shareUrl);
-      alert('결과 공유 링크가 복사되었습니다.');
-    }
 
     function downloadCsv() {
       const rows = [
@@ -601,7 +592,6 @@
     document.getElementById('resetPer').addEventListener('click', resetPer);
     document.getElementById('resetSrim').addEventListener('click', resetSrim);
     document.getElementById('copyInitialLink').addEventListener('click', copyInitialLink);
-    document.getElementById('shareResult').addEventListener('click', shareResult);
     document.getElementById('downloadCsv').addEventListener('click', downloadCsv);
     document.getElementById('downloadJpg').addEventListener('click', downloadJpg);
     ['stockName','currentPrice','expectedEps','targetPer','srimStockName','bps','roe','requiredReturn'].forEach(id => {
