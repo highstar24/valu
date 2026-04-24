@@ -432,7 +432,7 @@
     const tabs = document.querySelectorAll('.tab');
     const panels = { per: document.getElementById('panel-per'), srim: document.getElementById('panel-srim') };
     let currentMode = 'per';
-    let latestResult = { mode: 'per', stockName: '', fairPrice: 0, currentPrice: 0, base1: '', base2: '', upside: 0 };
+    let latestResult = { mode: 'per', stockName: '', fairPrice: 0, currentPrice: 0, base1: '', base2: '', upside: 0, shareParams: '' };
 
     const formatWon = n => '₩' + Math.round(n || 0).toLocaleString('ko-KR');
     const formatPct = n => (n >= 0 ? '+' : '') + (Number.isFinite(n) ? n.toFixed(1) : 0) + '%';
@@ -474,7 +474,7 @@
       if (targetPer <= 0) return alert('PER 값이 -는 계산되지 않습니다');
       const fairPrice = expectedEps * targetPer;
       const upside = currentPrice ? ((fairPrice - currentPrice) / currentPrice) * 100 : 0;
-      latestResult = { mode: 'per', stockName, fairPrice, currentPrice, base1: `예상 EPS ${expectedEps.toLocaleString()}원`, base2: `목표 PER ${targetPer}배`, upside };
+      latestResult = { mode: 'per', stockName, fairPrice, currentPrice, base1: `예상 EPS ${expectedEps.toLocaleString()}원`, base2: `목표 PER ${targetPer}배`, upside, shareParams: syncUrl(true) };
       renderResult({
         title: `${stockName || 'PER'} 적정주가`,
         fairPrice,
@@ -522,17 +522,20 @@
       syncUrl();
     }
 
-    function syncUrl() {
+    function syncUrl(includeValues = true) {
       const params = new URLSearchParams();
       params.set('mode', currentMode);
-      if (document.getElementById('stockName').value) params.set('stockName', document.getElementById('stockName').value);
-      if (document.getElementById('currentPrice').value) params.set('currentPrice', document.getElementById('currentPrice').value);
-      if (document.getElementById('expectedEps').value) params.set('expectedEps', document.getElementById('expectedEps').value);
-      if (document.getElementById('targetPer').value) params.set('targetPer', document.getElementById('targetPer').value);
-      if (document.getElementById('srimStockName').value) params.set('srimStockName', document.getElementById('srimStockName').value);
-      if (document.getElementById('bps').value) params.set('bps', document.getElementById('bps').value);
-      if (document.getElementById('roe').value) params.set('roe', document.getElementById('roe').value);
-      if (document.getElementById('requiredReturn').value) params.set('requiredReturn', document.getElementById('requiredReturn').value);
+      if (includeValues) {
+        if (document.getElementById('stockName').value) params.set('stockName', document.getElementById('stockName').value);
+        if (document.getElementById('currentPrice').value) params.set('currentPrice', document.getElementById('currentPrice').value);
+        if (document.getElementById('currentPriceSrim').value) params.set('currentPriceSrim', document.getElementById('currentPriceSrim').value);
+        if (document.getElementById('expectedEps').value) params.set('expectedEps', document.getElementById('expectedEps').value);
+        if (document.getElementById('targetPer').value) params.set('targetPer', document.getElementById('targetPer').value);
+        if (document.getElementById('srimStockName').value) params.set('srimStockName', document.getElementById('srimStockName').value);
+        if (document.getElementById('bps').value) params.set('bps', document.getElementById('bps').value);
+        if (document.getElementById('roe').value) params.set('roe', document.getElementById('roe').value);
+        if (document.getElementById('requiredReturn').value) params.set('requiredReturn', document.getElementById('requiredReturn').value);
+      }
       history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
     }
 
@@ -548,16 +551,20 @@
 
     async function copyInitialLink() {
       const initialUrl = location.origin + location.pathname;
+      if (navigator.share) {
+        try { await navigator.share({ title: '밸류에이션 계산기', url: initialUrl }); return; } catch(e) {}
+      }
       await navigator.clipboard.writeText(initialUrl);
       alert('계산기 공유 링크가 복사되었습니다.');
     }
 
     async function shareResult() {
+      const shareUrl = latestResult.shareParams ? `${location.origin}${location.pathname}?${latestResult.shareParams}` : location.href;
       if (navigator.share) {
-        await navigator.share({ title: '밸류에이션 계산기 결과', text: `${latestResult.stockName || '종목'} 계산 결과`, url: location.href });
-      } else {
-        copyInitialLink();
+        try { await navigator.share({ title: '밸류에이션 계산기 결과', text: `${latestResult.stockName || '종목'} 계산 결과`, url: shareUrl }); return; } catch(e) {}
       }
+      await navigator.clipboard.writeText(shareUrl);
+      alert('결과 공유 링크가 복사되었습니다.');
     }
 
     function downloadCsv() {
