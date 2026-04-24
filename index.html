@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>밸류에이션 계산기</title>
   <meta name="description" content="PER 적정주가와 S-RIM 적정주가를 계산하고 공유·저장할 수 있는 모바일 중심 계산기" />
-  
+
   <script defer src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
   <style>
     @font-face { font-family: 'Paperlogy'; font-style: normal; font-weight: 400; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-4Regular.woff2') format('woff2'); }
@@ -424,7 +424,7 @@
             <div class="metric"><span id="metricBase1Label">기준값 1</span><strong id="metricBase1">-</strong></div>
             <div class="metric"><span id="metricBase2Label">기준값 2</span><strong id="metricBase2">-</strong></div>
           </div>
-                    <div class="compare-strip" id="compareStrip" aria-label="가격 비교 그래프">
+          <div class="compare-strip" id="compareStrip" aria-label="가격 비교 그래프">
             <div class="compare-row">
               <span class="compare-label">현재가</span>
               <div class="compare-bar-wrap"><div class="compare-bar current" id="currentBar"></div></div>
@@ -514,7 +514,7 @@
 
     function calculateSrim() {
       const stockName = document.getElementById('srimStockName').value.trim();
-      const currentPrice = Number(document.getElementById('currentPrice').value);
+      const currentPrice = Number(document.getElementById('currentPriceSrim').value);
       const bps = Number(document.getElementById('bps').value);
       if (!currentPrice) return alert('현재가격을 입력해주세요.');
       const roe = Number(document.getElementById('roe').value);
@@ -541,7 +541,7 @@
       syncUrl();
     }
     function resetSrim() {
-      ['srimStockName','bps','roe','requiredReturn'].forEach(id => document.getElementById(id).value = '');
+      ['srimStockName','currentPriceSrim','bps','roe','requiredReturn'].forEach(id => document.getElementById(id).value = '');
       syncUrl();
     }
 
@@ -566,21 +566,30 @@
       const params = new URLSearchParams(location.search);
       const mode = params.get('mode');
       if (mode && panels[mode]) document.querySelector(`.tab[data-tab="${mode}"]`).click();
-      ['stockName','currentPrice','expectedEps','targetPer','srimStockName','bps','roe','requiredReturn'].forEach(id => {
+      ['stockName','currentPrice','expectedEps','targetPer','srimStockName','currentPriceSrim','bps','roe','requiredReturn'].forEach(id => {
         const v = params.get(id);
         if (v !== null) document.getElementById(id).value = v;
       });
     }
 
     async function copyInitialLink() {
-      const initialUrl = location.href;
+      const url = location.href;
       if (navigator.share) {
-        try { await navigator.share({ title: '밸류에이션 계산기', text: '밸류에이션 계산기', url: initialUrl }); return; } catch(e) {}
+        try {
+          await navigator.share({ title: '밸류에이션 계산기', text: '속지않는 밸류에이션 계산기', url });
+        } catch (e) {
+          // 사용자가 공유 시트를 닫은 경우(AbortError)는 아무것도 하지 않음
+          if (e.name !== 'AbortError') {
+            await navigator.clipboard.writeText(url);
+            alert('공유 링크가 복사되었습니다.');
+          }
+        }
+        return;
       }
-      await navigator.clipboard.writeText(initialUrl);
+      // 데스크톱 등 share API 미지원 환경
+      await navigator.clipboard.writeText(url);
       alert('공유 링크가 복사되었습니다.');
     }
-
 
     function downloadCsv() {
       const rows = [
@@ -618,11 +627,10 @@
     document.getElementById('copyInitialLink').addEventListener('click', copyInitialLink);
     document.getElementById('downloadCsv').addEventListener('click', downloadCsv);
     document.getElementById('downloadJpg').addEventListener('click', downloadJpg);
-    ['stockName','currentPrice','expectedEps','targetPer','srimStockName','bps','roe','requiredReturn'].forEach(id => {
+    ['stockName','currentPrice','expectedEps','targetPer','srimStockName','currentPriceSrim','bps','roe','requiredReturn'].forEach(id => {
       document.getElementById(id).addEventListener('input', syncUrl);
     });
 
     restoreFromUrl();
   </script>
 </body>
-
