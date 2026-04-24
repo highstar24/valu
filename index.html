@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>밸류에이션 계산기</title>
+  <meta name="description" content="PER 적정주가와 S-RIM 적정주가를 계산하고 공유·저장할 수 있는 모바일 중심 계산기" />
+  
+  <script defer src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+  <style>
+    @font-face { font-family: 'Paperlogy'; font-style: normal; font-weight: 400; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-4Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Paperlogy'; font-style: normal; font-weight: 600; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-6SemiBold.woff2') format('woff2'); }
+    @font-face { font-family: 'Paperlogy'; font-style: normal; font-weight: 700; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-7Bold.woff2') format('woff2'); }
+    @font-face { font-family: 'Paperlogy'; font-style: normal; font-weight: 800; font-display: swap; src: url('https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy-8ExtraBold.woff2') format('woff2'); }
+
+    :root {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem;
+      --bg: #fff3ef;
+      --surface: #fffdfc;
+      --surface-2: #fff8f6;
+      --primary: #f26b6b;
+      --primary-hover: #e45858;
+      --primary-soft: #ffd8d2;
+      --lilac: #dccff8;
+      --text: #332c39;
+      --muted: #7a6f7a;
+      --border: #f2d9d4;
+      --shadow: 0 10px 30px rgba(202, 118, 118, 0.12);
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 999px;
+      --font-display: 'Paperlogy', sans-serif;
+      --font-body: 'Paperlogy', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      background: linear-gradient(180deg, #ffeae4 0%, var(--bg) 45%, #fff8f5 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    button, input { font: inherit; }
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      padding: var(--space-5) var(--space-4) var(--space-12);
+    }
+    .hero {
+      padding: var(--space-6);
+      text-align: center;
+      border-radius: 32px;
+      background: linear-gradient(135deg, #ffd8d2 0%, #ffe9e4 60%, #f4eefe 100%);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      right: -48px;
+      top: -48px;
+      background: rgba(255,255,255,0.45);
+    }
+    .eyebrow {
+      display: inline-flex;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      background: rgba(255,255,255,0.72);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      position: relative;
+      z-index: 1;
+    }
+    h1 {
+      margin: 14px 0 10px;
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .clover-logo {
+      width: 30px;
+      height: 30px;
+      filter: drop-shadow(0 4px 8px rgba(57, 138, 57, 0.18));
+    }
+    .hero-brand strong {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--text);
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: var(--text-sm);
+      max-width: 30ch;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: var(--space-5) 0;
+    }
+    .tab {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.75);
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(242, 107, 107, 0.25);
+    }
+    .panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid rgba(51,44,57,0.06);
+      border-radius: 28px;
+      padding: var(--space-5);
+      box-shadow: var(--shadow);
+    }
+    .panel.active { display: block; }
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+    .hint {
+      display: block;
+      margin-top: 6px;
+      font-size: var(--text-xs);
+      color: var(--muted);
+    }
+    .field input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 15px 16px;
+      background: var(--surface-2);
+      color: var(--text);
+      outline: none;
+    }
+    .field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(242,107,107,0.12);
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: var(--space-5);
+    }
+    .btn {
+      border: 0;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-soft { background: #fff1ee; color: var(--text); border: 1px solid var(--border); }
+    .result-card {
+      margin-top: var(--space-5);
+      padding: var(--space-5);
+      border-radius: 28px;
+      background: linear-gradient(160deg, #fff7f5 0%, #fffdfd 55%, #f5eefc 100%);
+      border: 1px solid rgba(51,44,57,0.06);
+      box-shadow: var(--shadow);
+    }
+    .result-card h2 {
+      margin: 0 0 10px;
+      font-size: var(--text-lg);
+      font-family: var(--font-display);
+      font-weight: 400;
+    }
+    .price {
+      font-size: clamp(2rem, 1.8rem + 2vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 8px 0 4px;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-4);
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .metric {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(51,44,57,0.06);
+      border-radius: 20px;
+      padding: 14px;
+    }
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: var(--text-xs);
+      margin-bottom: 6px;
+    }
+    .metric strong {
+      font-size: var(--text-base);
+    }
+    .chart-wrap {
+      margin-top: var(--space-4);
+      padding: 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(51,44,57,0.06);
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: var(--space-4);
+    }
+    .toolbar .btn { padding: 13px 14px; font-size: var(--text-sm); }
+    .notice-box {
+      margin-top: var(--space-4);
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: #fff4f1;
+      border: 1px solid var(--border);
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(242, 107, 107, 0.08);
+    }
+    .calc-warning {
+      background: #fff7ef;
+      text-align: center;
+    }
+    .calc-warning .footer-note {
+      color: #7b5b52;
+    }
+    .footer-note {
+      margin: 0;
+      font-size: var(--text-xs);
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+    @media (min-width: 768px) {
+      .app { max-width: 960px; }
+      .layout { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 22px; align-items: start; }
+      .hero { margin-bottom: var(--space-5); }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <span class="eyebrow">MOBILE VALUATION TOOL</span>
+      <h1>속지않는<br>밸류에이션 계산기</h1>
+      <p>PER 적정주가와 S-RIM 적정주가를<br>링크로 공유하고<br>CSV, JPG 파일로 저장할 수 있어요</p>
+      <div class="hero-brand">
+        <svg class="clover-logo" viewBox="0 0 64 64" aria-label="Lucky 2026 네잎클로버 로고" role="img">
+          <circle cx="32" cy="32" r="6" fill="#67b84f"/>
+          <circle cx="21" cy="21" r="12" fill="#7fd35f"/>
+          <circle cx="43" cy="21" r="12" fill="#7fd35f"/>
+          <circle cx="21" cy="43" r="12" fill="#7fd35f"/>
+          <circle cx="43" cy="43" r="12" fill="#7fd35f"/>
+          <path d="M32 34c0 10 4 17 12 24" stroke="#5aa845" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </svg>
+        <strong>Lucky 2026</strong>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section>
+        <div class="tabs">
+          <button class="tab active" data-tab="per">PER 계산기</button>
+          <button class="tab" data-tab="srim">S-RIM 계산기</button>
+        </div>
+
+        <section class="panel active" id="panel-per">
+          <div class="grid">
+            <div class="notice-box calc-warning"><p class="footer-note">PER 값이 -면 계산되지 않습니다<br>모멘텀으로 상승하는 바이오와 로봇관련주는<br>다른 계산식을 사용하세요</p></div>
+            <div class="field">
+              <label for="stockName">종목명</label>
+              <input id="stockName" type="text" placeholder="예: 삼성전자" />
+            </div>
+            <div class="field">
+              <label for="currentPrice">현재 주가</label>
+              <input id="currentPrice" type="number" placeholder="예: 70000" />
+            </div>
+            <div class="field">
+              <label for="expectedEps">예상 EPS</label>
+              <input id="expectedEps" type="number" placeholder="예: 5000" />
+              <span class="hint">컨센서스나 본인 추정치를 넣으면 됩니다.</span>
+            </div>
+            <div class="field">
+              <label for="targetPer">목표 PER</label>
+              <input id="targetPer" type="number" step="0.1" placeholder="예: 15" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" id="calcPer">계산하기</button>
+            <button class="btn btn-soft" id="resetPer">초기화</button>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-srim">
+          <div class="grid">
+            <div class="field">
+              <label for="srimStockName">종목명</label>
+              <input id="srimStockName" type="text" placeholder="예: 삼성전자" />
+            </div>
+            <div class="field">
+              <label for="currentPriceSrim">현재 주가</label>
+              <input id="currentPriceSrim" type="number" placeholder="예: 70000" />
+            </div>
+            <div class="field">
+              <label for="bps">BPS</label>
+              <input id="bps" type="number" placeholder="예: 63000" />
+            </div>
+            <div class="field">
+              <label for="roe">ROE (%)</label>
+              <input id="roe" type="number" step="0.1" placeholder="예: 12" />
+            </div>
+            <div class="field">
+              <label for="requiredReturn">요구수익률 k (%)</label>
+              <input id="requiredReturn" type="number" step="0.1" placeholder="예: 8" />
+              <span class="hint">공식: 적정주가 = BPS + BPS × (ROE-k) ÷ k</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" id="calcSrim">계산하기</button>
+            <button class="btn btn-soft" id="resetSrim">초기화</button>
+          </div>
+        </section>
+      </section>
+
+      <section>
+        <article class="result-card" id="resultCard">
+          <h2 id="resultTitle">결과 미리보기</h2>
+          <div class="price" id="fairPrice">₩0</div>
+          <div class="sub" id="resultDesc">적정주가까지 꼭 상승한다는 의미보다<br>이 가격까지 상승 가능하다고 보셔야합니다</div>
+          <div class="metrics">
+            <div class="metric"><span>현재가</span><strong id="metricCurrent">-</strong></div>
+            <div class="metric"><span>상승여력</span><strong id="metricUpside">-</strong></div>
+            <div class="metric"><span id="metricBase1Label">기준값 1</span><strong id="metricBase1">-</strong></div>
+            <div class="metric"><span id="metricBase2Label">기준값 2</span><strong id="metricBase2">-</strong></div>
+          </div>
+          <div class="chart-wrap"><canvas id="priceChart" height="180"></canvas></div>
+          <div class="toolbar">
+            <button class="btn btn-soft" id="copyInitialLink">계산기 공유</button>
+            <button class="btn btn-soft" id="shareResult">결과 공유</button>
+            <button class="btn btn-soft" id="downloadCsv">CSV 저장</button>
+            <button class="btn btn-primary" id="downloadJpg">JPG 저장</button>
+          </div>
+          <div class="notice-box"><p class="footer-note">계산 후 나오는 적정 주가는<br>참고 수치일 뿐<br>매매의 절대적인 기준이 될 수 없습니다.<br>투자는 스스로 공부하고 하세요</p></div>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const panels = { per: document.getElementById('panel-per'), srim: document.getElementById('panel-srim') };
+    let currentMode = 'per';
+    let latestResult = { mode: 'per', stockName: '', fairPrice: 0, currentPrice: 0, base1: '', base2: '', upside: 0 };
+
+    const formatWon = n => '₩' + Math.round(n || 0).toLocaleString('ko-KR');
+    const formatPct = n => (n >= 0 ? '+' : '') + (Number.isFinite(n) ? n.toFixed(1) : 0) + '%';
+
+    tabs.forEach(btn => btn.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      currentMode = btn.dataset.tab;
+      Object.values(panels).forEach(p => p.classList.remove('active'));
+      panels[currentMode].classList.add('active');
+      syncUrl();
+    }));
+
+    function renderResult({ title, fairPrice, desc, currentPrice, upside, base1, base2, label1, label2 }) {
+      document.getElementById('resultTitle').textContent = title;
+      document.getElementById('fairPrice').textContent = formatWon(fairPrice);
+      document.getElementById('resultDesc').innerHTML = desc;
+      document.getElementById('metricBase1Label').textContent = label1 || (latestResult.mode === 'per' ? '예상 EPS' : 'BPS');
+      document.getElementById('metricBase2Label').textContent = label2 || (latestResult.mode === 'per' ? '목표 PER' : 'ROE / k');
+      document.getElementById('metricCurrent').textContent = currentPrice ? formatWon(currentPrice) : '-';
+      document.getElementById('metricUpside').textContent = Number.isFinite(upside) ? formatPct(upside) : '-';
+      document.getElementById('metricBase1').textContent = base1 || '-';
+      document.getElementById('metricBase2').innerHTML = base2 || '-';
+    }
+
+    function calculatePer() {
+      const stockName = document.getElementById('stockName').value.trim();
+      const currentPrice = Number(document.getElementById('currentPrice').value);
+      if (!currentPrice) return alert('현재가격을 입력해주세요.');
+      const expectedEps = Number(document.getElementById('expectedEps').value);
+      const targetPer = Number(document.getElementById('targetPer').value);
+      if (!expectedEps || !targetPer) return alert('예상 EPS와 목표 PER를 입력해주세요.');
+      if (targetPer <= 0) return alert('PER 값이 0 이하이면 계산되지 않습니다.');
+      const fairPrice = expectedEps * targetPer;
+      const upside = currentPrice ? ((fairPrice - currentPrice) / currentPrice) * 100 : 0;
+      latestResult = { mode: 'per', stockName, fairPrice, currentPrice, base1: `예상 EPS ${expectedEps.toLocaleString()}원`, base2: `목표 PER ${targetPer}배`, upside };
+      renderResult({
+        title: `${stockName || 'PER'} 적정주가`,
+        fairPrice,
+        desc: '공식: 적정주가 = 예상 EPS × 목표 PER',
+        currentPrice,
+        upside,
+        base1: latestResult.base1,
+        base2: latestResult.base2,
+        label1: '계산 기준 1',
+        label2: '계산 기준 2'
+      });
+      syncUrl();
+    }
+
+    function calculateSrim() {
+      const stockName = document.getElementById('srimStockName').value.trim();
+      const currentPrice = Number(document.getElementById('currentPrice').value);
+      const bps = Number(document.getElementById('bps').value);
+      if (!currentPrice) return alert('현재가격을 입력해주세요.');
+      const roe = Number(document.getElementById('roe').value);
+      const k = Number(document.getElementById('requiredReturn').value);
+      if (!bps || !roe || !k) return alert('BPS, ROE, 요구수익률을 입력해주세요.');
+      const fairPrice = bps + (bps * ((roe / 100) - (k / 100)) / (k / 100));
+      latestResult = { mode: 'srim', stockName, fairPrice, currentPrice: 0, base1: `BPS ${bps.toLocaleString()}원`, base2: `ROE ${roe}% / k ${k}%`, upside: 0 };
+      renderResult({
+        title: `${stockName || 'S-RIM'} 적정주가`,
+        fairPrice,
+        desc: '공식: BPS + BPS × (ROE-k) ÷ k',
+        currentPrice,
+        upside: 0,
+        base1: latestResult.base1,
+        base2: latestResult.base2,
+        label1: '계산 기준 1',
+        label2: '계산 기준 2'
+      });
+      syncUrl();
+    }
+
+    function resetPer() {
+      ['stockName','currentPrice','expectedEps','targetPer'].forEach(id => document.getElementById(id).value = '');
+      syncUrl();
+    }
+    function resetSrim() {
+      ['srimStockName','bps','roe','requiredReturn'].forEach(id => document.getElementById(id).value = '');
+      syncUrl();
+    }
+
+    function syncUrl() {
+      const params = new URLSearchParams();
+      params.set('mode', currentMode);
+      if (document.getElementById('stockName').value) params.set('stockName', document.getElementById('stockName').value);
+      if (document.getElementById('currentPrice').value) params.set('currentPrice', document.getElementById('currentPrice').value);
+      if (document.getElementById('expectedEps').value) params.set('expectedEps', document.getElementById('expectedEps').value);
+      if (document.getElementById('targetPer').value) params.set('targetPer', document.getElementById('targetPer').value);
+      if (document.getElementById('srimStockName').value) params.set('srimStockName', document.getElementById('srimStockName').value);
+      if (document.getElementById('bps').value) params.set('bps', document.getElementById('bps').value);
+      if (document.getElementById('roe').value) params.set('roe', document.getElementById('roe').value);
+      if (document.getElementById('requiredReturn').value) params.set('requiredReturn', document.getElementById('requiredReturn').value);
+      history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+    }
+
+    function restoreFromUrl() {
+      const params = new URLSearchParams(location.search);
+      const mode = params.get('mode');
+      if (mode && panels[mode]) document.querySelector(`.tab[data-tab="${mode}"]`).click();
+      ['stockName','currentPrice','expectedEps','targetPer','srimStockName','bps','roe','requiredReturn'].forEach(id => {
+        const v = params.get(id);
+        if (v !== null) document.getElementById(id).value = v;
+      });
+    }
+
+    async function copyInitialLink() {
+      const initialUrl = location.origin + location.pathname;
+      await navigator.clipboard.writeText(initialUrl);
+      alert('계산기 공유 링크가 복사되었습니다.');
+    }
+
+    async function shareResult() {
+      if (navigator.share) {
+        await navigator.share({ title: '밸류에이션 계산기 결과', text: `${latestResult.stockName || '종목'} 계산 결과`, url: location.href });
+      } else {
+        copyInitialLink();
+      }
+    }
+
+    function downloadCsv() {
+      const rows = [
+        ['항목','값'],
+        ['모드', latestResult.mode],
+        ['종목명', latestResult.stockName || ''],
+        ['적정주가', Math.round(latestResult.fairPrice || 0)],
+        ['현재가', Math.round(latestResult.currentPrice || 0)],
+        ['기준1', latestResult.base1 || ''],
+        ['기준2', latestResult.base2 || ''],
+        ['상승여력(%)', Number.isFinite(latestResult.upside) ? latestResult.upside.toFixed(1) : '0']
+      ];
+      const csv = '\uFEFF' + rows.map(r => r.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'valuation-result.csv';
+      a.click();
+    }
+
+    function downloadJpg() {
+      htmlToImage.toJpeg(document.getElementById('resultCard'), { quality: 0.95, backgroundColor: '#fff7f5', pixelRatio: 2 })
+        .then(function (dataUrl) {
+          const a = document.createElement('a');
+          a.download = 'valuation-result.jpg';
+          a.href = dataUrl;
+          a.click();
+        });
+    }
+
+    document.getElementById('calcPer').addEventListener('click', calculatePer);
+    document.getElementById('calcSrim').addEventListener('click', calculateSrim);
+    document.getElementById('resetPer').addEventListener('click', resetPer);
+    document.getElementById('resetSrim').addEventListener('click', resetSrim);
+    document.getElementById('copyInitialLink').addEventListener('click', copyInitialLink);
+    document.getElementById('shareResult').addEventListener('click', shareResult);
+    document.getElementById('downloadCsv').addEventListener('click', downloadCsv);
+    document.getElementById('downloadJpg').addEventListener('click', downloadJpg);
+    ['stockName','currentPrice','expectedEps','targetPer','srimStockName','bps','roe','requiredReturn'].forEach(id => {
+      document.getElementById(id).addEventListener('input', syncUrl);
+    });
+
+    restoreFromUrl();
+  </script>
+</body>
+</html>
