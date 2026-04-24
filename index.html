@@ -50,8 +50,6 @@
       margin: 0 auto;
       padding: var(--space-5) var(--space-4) var(--space-12);
     }
-
-    /* ── 히어로 ── */
     .hero {
       padding: var(--space-6);
       text-align: center;
@@ -107,8 +105,6 @@
       max-width: 30ch;
       position: relative; z-index: 1;
     }
-
-    /* ── 탭 ── */
     .tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -130,8 +126,6 @@
       border-color: transparent;
       box-shadow: 0 12px 24px rgba(242,107,107,0.25);
     }
-
-    /* ── 패널 (흰색) ── */
     .panel {
       display: none;
       background: var(--surface);
@@ -141,8 +135,6 @@
       box-shadow: var(--shadow);
     }
     .panel.active { display: block; }
-
-    /* ── 입력 필드 ── */
     .grid { display: grid; gap: 14px; }
     .field label {
       display: block;
@@ -170,8 +162,6 @@
       gap: 10px;
       margin-top: var(--space-5);
     }
-
-    /* ── 버튼 ── */
     .btn {
       border: 0;
       border-radius: 18px;
@@ -183,8 +173,6 @@
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-soft { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
     .btn-soft:hover { background: var(--accent-bg); }
-
-    /* ── 결과 카드 (흰색) ── */
     .result-card {
       margin-top: var(--space-5);
       padding: var(--space-5);
@@ -205,8 +193,6 @@
       letter-spacing: -0.03em;
       margin: 4px 0 12px;
     }
-
-    /* ── 공통 강조 박스 (#fff4f1) ── */
     .info-box {
       padding: 14px 16px;
       border-radius: 18px;
@@ -220,8 +206,6 @@
       color: var(--accent-text);
       line-height: 1.75;
     }
-
-    /* ── 지표 그리드 ── */
     .metrics {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -236,8 +220,6 @@
     }
     .metric span { display: block; color: var(--muted); font-size: var(--text-xs); margin-bottom: 6px; }
     .metric strong { font-size: var(--text-base); }
-
-    /* ── 비교 바 ── */
     .compare-strip {
       margin-top: var(--space-4);
       padding: 14px 16px;
@@ -264,15 +246,11 @@
     .compare-bar.current { background: linear-gradient(90deg, #d7c3f6, #bca5ec); }
     .compare-bar.fair { background: linear-gradient(90deg, #f26b6b, #dc6767); }
     .compare-value { font-size: 12px; color: var(--text); font-weight: 700; }
-
-    /* ── 툴바 버튼 ── */
     .toolbar { display: grid; gap: 10px; margin-top: var(--space-4); }
     .toolbar-save-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .btn-half { width: 100%; height: 48px; }
     .btn-share { width: 100%; height: 48px; }
     .toolbar .btn { padding: 13px 14px; font-size: var(--text-sm); }
-
-    /* ── 하단 면책 박스 ── */
     .notice-box {
       margin-top: var(--space-4);
       padding: 14px 16px;
@@ -287,7 +265,6 @@
       color: var(--accent-text);
       line-height: 1.75;
     }
-
     @media (min-width: 768px) {
       .app { max-width: 960px; }
       .layout { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 22px; align-items: start; }
@@ -469,8 +446,7 @@
       latestResult = { mode: 'per', stockName, fairPrice, currentPrice, base1: `예상 EPS ${expectedEps.toLocaleString()}원`, base2: `목표 PER ${targetPer}배`, upside };
       renderResult({
         title: `${stockName || 'PER'} 적정주가`,
-        fairPrice,
-        desc: '공식: 적정주가 = 예상 EPS × 목표 PER',
+        fairPrice, desc: '공식: 적정주가 = 예상 EPS × 목표 PER',
         currentPrice, upside,
         base1: latestResult.base1, base2: latestResult.base2,
         label1: '계산 기준 1', label2: '계산 기준 2'
@@ -491,8 +467,7 @@
       latestResult = { mode: 'srim', stockName, fairPrice, currentPrice, base1: `BPS ${bps.toLocaleString()}원`, base2: `ROE ${roe}% / k ${k}%`, upside };
       renderResult({
         title: `${stockName || 'S-RIM'} 적정주가`,
-        fairPrice,
-        desc: '공식: BPS + BPS × (ROE-k) ÷ k',
+        fairPrice, desc: '공식: BPS + BPS × (ROE-k) ÷ k',
         currentPrice, upside,
         base1: latestResult.base1, base2: latestResult.base2,
         label1: '계산 기준 1', label2: '계산 기준 2'
@@ -530,23 +505,23 @@
     }
 
     async function copyInitialLink() {
-      const url = location.href;
+      // 입력값 없이 깨끗한 URL만 공유 (pathname만, 쿼리 파라미터 제거)
+      const cleanUrl = location.origin + location.pathname;
       if (navigator.share) {
         try {
-          await navigator.share({ title: '밸류에이션 계산기', text: '속지않는 밸류에이션 계산기', url });
+          await navigator.share({ title: '밸류에이션 계산기', text: '속지않는 밸류에이션 계산기', url: cleanUrl });
         } catch (e) {
           if (e.name !== 'AbortError') {
-            await navigator.clipboard.writeText(url);
+            await navigator.clipboard.writeText(cleanUrl);
             alert('공유 링크가 복사되었습니다.');
           }
         }
         return;
       }
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(cleanUrl);
       alert('공유 링크가 복사되었습니다.');
     }
 
-    // CSV 값에 쉼표/따옴표/줄바꿈이 있으면 따옴표로 감싸기
     function csvEscape(v) {
       const s = String(v == null ? '' : v);
       return (s.includes(',') || s.includes('"') || s.includes('\n'))
@@ -556,35 +531,26 @@
 
     function downloadCsv() {
       const modeName = latestResult.mode === 'per' ? 'PER' : 'S-RIM';
-      const fairFormatted = formatWon(latestResult.fairPrice);
-      const currentFormatted = latestResult.currentPrice ? formatWon(latestResult.currentPrice) : '-';
-      const upsideFormatted = Number.isFinite(latestResult.upside) ? latestResult.upside.toFixed(1) + '%' : '-';
-
       const rows = [
         ['항목', '값'],
         ['계산 방식', modeName],
         ['종목명', latestResult.stockName || '-'],
-        ['적정주가', fairFormatted],
-        ['현재가', currentFormatted],
+        ['적정주가', formatWon(latestResult.fairPrice)],
+        ['현재가', latestResult.currentPrice ? formatWon(latestResult.currentPrice) : '-'],
         ['계산 기준 1', latestResult.base1 || '-'],
         ['계산 기준 2', latestResult.base2 || '-'],
-        ['상승여력', upsideFormatted],
+        ['상승여력', Number.isFinite(latestResult.upside) ? latestResult.upside.toFixed(1) + '%' : '-'],
         [''],
         ['※ 참고용 수치입니다. 투자의 절대적 기준이 될 수 없습니다.']
       ];
-
       const csv = '\uFEFF' + rows.map(r => r.map(csvEscape).join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-
-      // 모바일 대응: <a> 클릭 방식
       const a = document.createElement('a');
-      a.href = url;
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
       a.download = `밸류에이션_${latestResult.stockName || modeName}.csv`;
       a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
-      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 300);
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 300);
     }
 
     function downloadJpg() {
