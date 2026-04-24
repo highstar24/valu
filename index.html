@@ -21,18 +21,16 @@
       --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem;
       --bg: #fff3ef;
-      --surface: #fffdfc;
+      --surface: #ffffff;
       --surface-2: #fff8f6;
       --primary: #f26b6b;
       --primary-hover: #e45858;
-      --primary-soft: #ffd8d2;
-      --lilac: #dccff8;
+      --accent-bg: #fff4f1;
       --text: #332c39;
       --muted: #7a6f7a;
       --border: #f2d9d4;
-      --shadow: 0 10px 30px rgba(202, 118, 118, 0.12);
-      --radius-md: 16px;
-      --radius-lg: 24px;
+      --accent-text: #7b5b52;
+      --shadow: 0 10px 30px rgba(202, 118, 118, 0.10);
       --radius-full: 999px;
       --font-display: 'Paperlogy', sans-serif;
       --font-body: 'Paperlogy', sans-serif;
@@ -52,6 +50,8 @@
       margin: 0 auto;
       padding: var(--space-5) var(--space-4) var(--space-12);
     }
+
+    /* ── 히어로 ── */
     .hero {
       padding: var(--space-6);
       text-align: center;
@@ -64,11 +64,9 @@
     .hero::after {
       content: '';
       position: absolute;
-      width: 160px;
-      height: 160px;
+      width: 160px; height: 160px;
       border-radius: 50%;
-      right: -48px;
-      top: -48px;
+      right: -48px; top: -48px;
       background: rgba(255,255,255,0.45);
     }
     .eyebrow {
@@ -79,8 +77,7 @@
       font-size: var(--text-xs);
       font-weight: 700;
       letter-spacing: 0.04em;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
     }
     h1 {
       margin: 14px 0 10px;
@@ -88,8 +85,7 @@
       font-size: var(--text-xl);
       line-height: 1.05;
       letter-spacing: -0.03em;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
     }
     .hero-brand {
       display: flex;
@@ -97,28 +93,22 @@
       justify-content: center;
       gap: 10px;
       margin-top: 14px;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
     }
     .clover-logo {
-      width: 30px;
-      height: 30px;
-      filter: drop-shadow(0 4px 8px rgba(57, 138, 57, 0.18));
+      width: 30px; height: 30px;
+      filter: drop-shadow(0 4px 8px rgba(57,138,57,0.18));
     }
-    .hero-brand strong {
-      font-size: var(--text-sm);
-      font-weight: 700;
-      color: var(--text);
-    }
+    .hero-brand strong { font-size: var(--text-sm); font-weight: 700; color: var(--text); }
     .hero p {
-      margin: 0;
+      margin: 0 auto;
       color: var(--muted);
       font-size: var(--text-sm);
       max-width: 30ch;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
     }
+
+    /* ── 탭 ── */
     .tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -129,41 +119,38 @@
       padding: 14px 16px;
       border: 1px solid var(--border);
       border-radius: 18px;
-      background: rgba(255,255,255,0.75);
+      background: var(--surface);
       color: var(--muted);
       font-weight: 700;
+      cursor: pointer;
     }
     .tab.active {
       background: var(--primary);
       color: white;
       border-color: transparent;
-      box-shadow: 0 12px 24px rgba(242, 107, 107, 0.25);
+      box-shadow: 0 12px 24px rgba(242,107,107,0.25);
     }
+
+    /* ── 패널 (흰색) ── */
     .panel {
       display: none;
       background: var(--surface);
-      border: 1px solid rgba(51,44,57,0.06);
+      border: 1px solid var(--border);
       border-radius: 28px;
       padding: var(--space-5);
       box-shadow: var(--shadow);
     }
     .panel.active { display: block; }
-    .grid {
-      display: grid;
-      gap: 14px;
-    }
+
+    /* ── 입력 필드 ── */
+    .grid { display: grid; gap: 14px; }
     .field label {
       display: block;
       margin-bottom: 8px;
       font-size: var(--text-sm);
       font-weight: 700;
     }
-    .hint {
-      display: block;
-      margin-top: 6px;
-      font-size: var(--text-xs);
-      color: var(--muted);
-    }
+    .hint { display: block; margin-top: 6px; font-size: var(--text-xs); color: var(--muted); }
     .field input {
       width: 100%;
       border: 1px solid var(--border);
@@ -183,6 +170,8 @@
       gap: 10px;
       margin-top: var(--space-5);
     }
+
+    /* ── 버튼 ── */
     .btn {
       border: 0;
       border-radius: 18px;
@@ -192,17 +181,20 @@
     }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: var(--primary-hover); }
-    .btn-soft { background: #fff1ee; color: var(--text); border: 1px solid var(--border); }
+    .btn-soft { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-soft:hover { background: var(--accent-bg); }
+
+    /* ── 결과 카드 (흰색) ── */
     .result-card {
       margin-top: var(--space-5);
       padding: var(--space-5);
       border-radius: 28px;
-      background: linear-gradient(160deg, #fff7f5 0%, #fffdfd 55%, #f5eefc 100%);
-      border: 1px solid rgba(51,44,57,0.06);
+      background: var(--surface);
+      border: 1px solid var(--border);
       box-shadow: var(--shadow);
     }
     .result-card h2 {
-      margin: 0 0 10px;
+      margin: 0 0 6px;
       font-size: var(--text-lg);
       font-family: var(--font-display);
       font-weight: 400;
@@ -211,46 +203,47 @@
       font-size: clamp(2rem, 1.8rem + 2vw, 2.8rem);
       font-weight: 800;
       letter-spacing: -0.03em;
-      margin: 8px 0 4px;
+      margin: 4px 0 12px;
     }
-    .sub {
-      color: var(--muted);
-      font-size: var(--text-sm);
-      margin-bottom: var(--space-4);
+
+    /* ── 공통 강조 박스 (#fff4f1) ── */
+    .info-box {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--accent-bg);
+      border: 1px solid var(--border);
+      text-align: center;
     }
+    .info-box p {
+      margin: 0;
+      font-size: var(--text-xs);
+      color: var(--accent-text);
+      line-height: 1.75;
+    }
+
+    /* ── 지표 그리드 ── */
     .metrics {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+      margin-top: var(--space-4);
     }
     .metric {
-      background: rgba(255,255,255,0.8);
-      border: 1px solid rgba(51,44,57,0.06);
-      border-radius: 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 18px;
       padding: 14px;
     }
-    .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: var(--text-xs);
-      margin-bottom: 6px;
-    }
-    .metric strong {
-      font-size: var(--text-base);
-    }
-    .chart-wrap {
-      margin-top: var(--space-4);
-      padding: 14px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(51,44,57,0.06);
-    }
+    .metric span { display: block; color: var(--muted); font-size: var(--text-xs); margin-bottom: 6px; }
+    .metric strong { font-size: var(--text-base); }
+
+    /* ── 비교 바 ── */
     .compare-strip {
       margin-top: var(--space-4);
-      padding: 14px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(51,44,57,0.06);
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
     }
     .compare-row {
       display: grid;
@@ -262,64 +255,39 @@
     .compare-row:last-child { margin-bottom: 0; }
     .compare-label { font-size: 12px; color: var(--muted); font-weight: 700; }
     .compare-bar-wrap {
-      height: 12px;
-      border-radius: 999px;
-      background: #f4e6e2;
+      height: 10px;
+      border-radius: var(--radius-full);
+      background: var(--border);
       overflow: hidden;
-      position: relative;
     }
-    .compare-bar { height: 100%; border-radius: 999px; width: 0%; transition: width .25s ease; }
+    .compare-bar { height: 100%; border-radius: var(--radius-full); width: 0%; transition: width .25s ease; }
     .compare-bar.current { background: linear-gradient(90deg, #d7c3f6, #bca5ec); }
     .compare-bar.fair { background: linear-gradient(90deg, #f26b6b, #dc6767); }
     .compare-value { font-size: 12px; color: var(--text); font-weight: 700; }
-    .toolbar {
-      display: grid;
-      gap: 12px;
-      margin-top: var(--space-4);
-    }
-    .toolbar-save-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .toolbar-share {
-      margin-top: 0;
-    }
-    .btn-half {
-      width: 100%;
-      padding-left: 12px;
-      padding-right: 12px;
-      min-width: 0;
-      height: 48px;
-    }
-    .btn-share {
-      width: 100%;
-      height: 48px;
-    }
+
+    /* ── 툴바 버튼 ── */
+    .toolbar { display: grid; gap: 10px; margin-top: var(--space-4); }
+    .toolbar-save-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-half { width: 100%; height: 48px; }
+    .btn-share { width: 100%; height: 48px; }
     .toolbar .btn { padding: 13px 14px; font-size: var(--text-sm); }
+
+    /* ── 하단 면책 박스 ── */
     .notice-box {
       margin-top: var(--space-4);
-      padding: 16px 18px;
-      border-radius: 22px;
-      background: #fff4f1;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--accent-bg);
       border: 1px solid var(--border);
       text-align: center;
-      box-shadow: 0 8px 18px rgba(242, 107, 107, 0.08);
-    }
-    .calc-warning {
-      background: #fff7ef;
-      text-align: center;
-    }
-    .calc-warning .footer-note {
-      color: #7b5b52;
     }
     .footer-note {
       margin: 0;
       font-size: var(--text-xs);
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.7;
+      color: var(--accent-text);
+      line-height: 1.75;
     }
+
     @media (min-width: 768px) {
       .app { max-width: 960px; }
       .layout { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 22px; align-items: start; }
@@ -355,7 +323,9 @@
 
         <section class="panel active" id="panel-per">
           <div class="grid">
-            <div class="notice-box calc-warning"><p class="footer-note">PER 값이 -면 계산되지 않습니다<br>모멘텀으로 상승하는 바이오와 로봇관련주는<br>다른 계산식을 사용하세요</p></div>
+            <div class="info-box">
+              <p>PER 값이 -면 계산되지 않습니다<br>모멘텀으로 상승하는 바이오와 로봇관련주는<br>다른 계산식을 사용하세요</p>
+            </div>
             <div class="field">
               <label for="stockName">종목명</label>
               <input id="stockName" type="text" placeholder="예: 삼성전자" />
@@ -415,8 +385,8 @@
         <article class="result-card" id="resultCard">
           <h2 id="resultTitle">결과 미리보기</h2>
           <div class="price" id="fairPrice">₩0</div>
-          <div class="result-note-box">
-            <div class="sub result-desc" id="resultDesc">적정주가까지 꼭 상승한다는 의미보다<br>이 가격까지 상승 가능하다고 보셔야합니다</div>
+          <div class="info-box">
+            <p id="resultDesc">적정주가까지 꼭 상승한다는 의미보다<br>이 가격까지 상승 가능하다고 보셔야합니다</p>
           </div>
           <div class="metrics">
             <div class="metric"><span>현재가</span><strong id="metricCurrent">-</strong></div>
@@ -441,11 +411,11 @@
               <button class="btn btn-soft btn-half" id="downloadCsv">CSV 저장</button>
               <button class="btn btn-primary btn-half" id="downloadJpg">JPG 저장</button>
             </div>
-            <div class="toolbar-share">
-              <button class="btn btn-soft btn-share" id="copyInitialLink">계산기 공유하기</button>
-            </div>
+            <button class="btn btn-soft btn-share" id="copyInitialLink">계산기 공유하기</button>
           </div>
-          <div class="notice-box"><p class="footer-note">참고 수치일 뿐<br>매매의 절대적인 기준이 될 수 없습니다.<br>투자는 스스로 공부하고 하세요</p></div>
+          <div class="notice-box">
+            <p class="footer-note">참고 수치일 뿐<br>매매의 절대적인 기준이 될 수 없습니다.<br>투자는 스스로 공부하고 하세요</p>
+          </div>
         </article>
       </section>
     </div>
@@ -455,7 +425,7 @@
     const tabs = document.querySelectorAll('.tab');
     const panels = { per: document.getElementById('panel-per'), srim: document.getElementById('panel-srim') };
     let currentMode = 'per';
-    let latestResult = { mode: 'per', stockName: '', fairPrice: 0, currentPrice: 0, base1: '', base2: '', upside: 0, shareParams: '' };
+    let latestResult = { mode: 'per', stockName: '', fairPrice: 0, currentPrice: 0, base1: '', base2: '', upside: 0 };
 
     const formatWon = n => '₩' + Math.round(n || 0).toLocaleString('ko-KR');
     const formatPct = n => (n >= 0 ? '+' : '') + (Number.isFinite(n) ? n.toFixed(1) : 0) + '%';
@@ -492,22 +462,18 @@
       if (!currentPrice) return alert('현재가격을 입력해주세요.');
       const expectedEps = Number(document.getElementById('expectedEps').value);
       const targetPer = Number(document.getElementById('targetPer').value);
-      if (!currentPrice) return alert('현재가격을 입력해주세요.');
       if (!expectedEps || !targetPer) return alert('예상 EPS와 목표 PER를 입력해주세요.');
       if (targetPer <= 0) return alert('PER 값이 -는 계산되지 않습니다');
       const fairPrice = expectedEps * targetPer;
-      const upside = currentPrice ? ((fairPrice - currentPrice) / currentPrice) * 100 : 0;
-      latestResult = { mode: 'per', stockName, fairPrice, currentPrice, base1: `예상 EPS ${expectedEps.toLocaleString()}원`, base2: `목표 PER ${targetPer}배`, upside, shareParams: syncUrl(true) };
+      const upside = ((fairPrice - currentPrice) / currentPrice) * 100;
+      latestResult = { mode: 'per', stockName, fairPrice, currentPrice, base1: `예상 EPS ${expectedEps.toLocaleString()}원`, base2: `목표 PER ${targetPer}배`, upside };
       renderResult({
         title: `${stockName || 'PER'} 적정주가`,
         fairPrice,
         desc: '공식: 적정주가 = 예상 EPS × 목표 PER',
-        currentPrice,
-        upside,
-        base1: latestResult.base1,
-        base2: latestResult.base2,
-        label1: '계산 기준 1',
-        label2: '계산 기준 2'
+        currentPrice, upside,
+        base1: latestResult.base1, base2: latestResult.base2,
+        label1: '계산 기준 1', label2: '계산 기준 2'
       });
       syncUrl();
     }
@@ -521,17 +487,15 @@
       const k = Number(document.getElementById('requiredReturn').value);
       if (!bps || !roe || !k) return alert('BPS, ROE, 요구수익률을 입력해주세요.');
       const fairPrice = bps + (bps * ((roe / 100) - (k / 100)) / (k / 100));
-      latestResult = { mode: 'srim', stockName, fairPrice, currentPrice: 0, base1: `BPS ${bps.toLocaleString()}원`, base2: `ROE ${roe}% / k ${k}%`, upside: 0 };
+      const upside = ((fairPrice - currentPrice) / currentPrice) * 100;
+      latestResult = { mode: 'srim', stockName, fairPrice, currentPrice, base1: `BPS ${bps.toLocaleString()}원`, base2: `ROE ${roe}% / k ${k}%`, upside };
       renderResult({
         title: `${stockName || 'S-RIM'} 적정주가`,
         fairPrice,
         desc: '공식: BPS + BPS × (ROE-k) ÷ k',
-        currentPrice,
-        upside: 0,
-        base1: latestResult.base1,
-        base2: latestResult.base2,
-        label1: '계산 기준 1',
-        label2: '계산 기준 2'
+        currentPrice, upside,
+        base1: latestResult.base1, base2: latestResult.base2,
+        label1: '계산 기준 1', label2: '계산 기준 2'
       });
       syncUrl();
     }
@@ -549,15 +513,8 @@
       const params = new URLSearchParams();
       params.set('mode', currentMode);
       if (includeValues) {
-        if (document.getElementById('stockName').value) params.set('stockName', document.getElementById('stockName').value);
-        if (document.getElementById('currentPrice').value) params.set('currentPrice', document.getElementById('currentPrice').value);
-        if (document.getElementById('currentPriceSrim').value) params.set('currentPriceSrim', document.getElementById('currentPriceSrim').value);
-        if (document.getElementById('expectedEps').value) params.set('expectedEps', document.getElementById('expectedEps').value);
-        if (document.getElementById('targetPer').value) params.set('targetPer', document.getElementById('targetPer').value);
-        if (document.getElementById('srimStockName').value) params.set('srimStockName', document.getElementById('srimStockName').value);
-        if (document.getElementById('bps').value) params.set('bps', document.getElementById('bps').value);
-        if (document.getElementById('roe').value) params.set('roe', document.getElementById('roe').value);
-        if (document.getElementById('requiredReturn').value) params.set('requiredReturn', document.getElementById('requiredReturn').value);
+        const ids = ['stockName','currentPrice','currentPriceSrim','expectedEps','targetPer','srimStockName','bps','roe','requiredReturn'];
+        ids.forEach(id => { const v = document.getElementById(id).value; if (v) params.set(id, v); });
       }
       history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
     }
@@ -578,7 +535,6 @@
         try {
           await navigator.share({ title: '밸류에이션 계산기', text: '속지않는 밸류에이션 계산기', url });
         } catch (e) {
-          // 사용자가 공유 시트를 닫은 경우(AbortError)는 아무것도 하지 않음
           if (e.name !== 'AbortError') {
             await navigator.clipboard.writeText(url);
             alert('공유 링크가 복사되었습니다.');
@@ -586,7 +542,6 @@
         }
         return;
       }
-      // 데스크톱 등 share API 미지원 환경
       await navigator.clipboard.writeText(url);
       alert('공유 링크가 복사되었습니다.');
     }
@@ -603,16 +558,15 @@
         ['상승여력(%)', Number.isFinite(latestResult.upside) ? latestResult.upside.toFixed(1) : '0']
       ];
       const csv = '\uFEFF' + rows.map(r => r.join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
       a.download = 'valuation-result.csv';
       a.click();
     }
 
     function downloadJpg() {
-      htmlToImage.toJpeg(document.getElementById('resultCard'), { quality: 0.95, backgroundColor: '#fff7f5', pixelRatio: 2 })
-        .then(function (dataUrl) {
+      htmlToImage.toJpeg(document.getElementById('resultCard'), { quality: 0.95, backgroundColor: '#ffffff', pixelRatio: 2 })
+        .then(dataUrl => {
           const a = document.createElement('a');
           a.download = 'valuation-result.jpg';
           a.href = dataUrl;
@@ -634,3 +588,4 @@
     restoreFromUrl();
   </script>
 </body>
+</html>
